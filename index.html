@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Adedanha</title>
+  <style>
+
+    body {
+      background: rgb(9,9,121);
+      background: linear-gradient(90deg, rgba(9,9,121,1) 0%, rgba(0,212,255,1) 100%);
+      font-family: sans-serif;
+    }
+
+    .wrapper {
+      text-align: center;
+    }
+
+    .letter {
+      position: absolute;
+      top: 40%;
+      font-size: 6.5em;
+      color: white;
+    }
+
+    .buttns {
+      position: absolute;
+      top: 65%;
+      width: 106%;
+    }
+
+    .easy {
+      margin-top: 15px;
+      color: white;
+    }
+
+    .button {
+      border-radius: 2px;
+      height: 50px;
+      background: #ade0ff;
+      border: none;
+      cursor: pointer;
+      font-size: 0.6em;
+    }
+    .button:hover, .button:focus, .button:active {
+      background: #90d5ff;
+    }
+
+    .button:disabled {
+      background: #5a8ba9;
+      cursor: wait;
+    }
+
+    .last_letters {
+      position: absolute;
+      top: 80%;
+      background: white;
+      width: 90%;
+      height: 100px;
+      left: 5%;
+      color: #d66565;
+      text-align: left;
+    }
+
+    .last_letters span {
+      padding-left: 15px;
+      margin-top: 15px;
+      height: 150px !important;
+      font-size: 2em;
+    }
+  </style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <span class="letter">A</span>
+
+    <div class="buttns">
+      <button class="button" onclick="run()">GERAR LETRA</button>
+      <div class="easy"> 
+        <input type="checkbox" id="easy" name="easy" onchange="easyMode()"> 
+        <label for="easy">Letras fáceis</label> 
+      </div>
+    </div>
+
+    <div class="last_letters"><span></span></div>
+  </div>
+
+
+  <script>
+    var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    var easy_letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'I', 'J', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V'];
+    var easy_mode = false;
+    var session_letters = JSON.parse(JSON.stringify(letters));
+    var running = null;
+    var last_number = null;
+    var last_letters = [];
+
+    function run () {
+
+      $('.button').attr('disabled', true)
+
+      if (session_letters.length === 0) {
+        newSession();
+      }
+
+      running = setInterval(function () {
+        last_number = getNumber()
+        $('.letter').text(session_letters[last_number])
+      }, 100)
+
+      setTimeout(function () {
+        stop()
+      }, 4000)
+    }
+
+    function stop () {
+      clearInterval(running)
+      last_letters.push(session_letters[last_number])
+      session_letters.splice(last_number, 1);
+      $('.last_letters span').html('');
+      $('.last_letters span').html(last_letters.reverse().join(' '))
+      $('.button').attr('disabled', false)
+    }
+
+    function getNumber () {
+      return Math.floor(Math.random() * (session_letters.length - 1))
+    }
+
+    function newSession () {
+      session_letters = JSON.parse(JSON.stringify(easy_mode ? easy_letters : letters));
+      last_number = null;
+      last_letters = [];
+      $('.last_letters span').html('')
+    }
+
+    function easyMode () {
+      easy_mode = $('#easy').prop('checked')
+
+      newSession()
+    }
+
+  </script>
+</body>
+
+</html>
